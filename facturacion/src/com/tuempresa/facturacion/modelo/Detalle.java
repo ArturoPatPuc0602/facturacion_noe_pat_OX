@@ -7,7 +7,8 @@ import lombok.*;
 @Embeddable @Getter @Setter
 public class Detalle {
 	
-	int cantidad;
+	 int cantidad;
+	 
 	 @ManyToOne(fetch = FetchType.LAZY, optional = true)
 	 Producto producto;
 

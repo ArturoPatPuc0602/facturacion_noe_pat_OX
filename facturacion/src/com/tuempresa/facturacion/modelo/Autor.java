@@ -1,4 +1,5 @@
 package com.tuempresa.facturacion.modelo;
+
 import java.util.*;
 
 import javax.persistence.*;
@@ -11,9 +12,7 @@ import lombok.*;
 
 @Entity @Getter @Setter
 public class Autor {
-	
-	@Id @GeneratedValue(generator="system-uuid") 
-	@Hidden
+	@Id @GeneratedValue(generator="system-uuid") @Hidden
 	 @GenericGenerator(name="system-uuid", strategy = "uuid")
 	 @Column(length=32)
 	 String oid;
@@ -24,5 +23,6 @@ public class Autor {
 	@OneToMany(mappedBy="autor")
 	@ListProperties("numero, descripcion, precio")
 	Collection<Producto> productos;
+	
 
 }

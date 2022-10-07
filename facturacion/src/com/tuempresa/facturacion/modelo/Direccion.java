@@ -1,23 +1,20 @@
 package com.tuempresa.facturacion.modelo;
-
 import javax.persistence.*;
 
 import lombok.*;
-@Embeddable
 
-@Getter @Setter
+@Embeddable @Getter @Setter
 public class Direccion {
-	
-	@Column(length = 30)
+
+	 @Column(length = 30)
 	 String viaPublica;
 	 
-	@Column(length = 5)
+	 @Column(length = 5)
 	 int codigoPostal;
 	 
-	@Column(length = 20)
+	 @Column(length = 20)
 	 String municipio;
 	 
-	@Column(length = 30)
+	 @Column(length = 30)
 	 String provincia;
-
 }

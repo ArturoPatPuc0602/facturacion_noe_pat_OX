@@ -18,7 +18,7 @@ implements ICalculator{
 	@Override
 	public Object calculate() throws Exception {
 		Query query = XPersistence.getManager()
-				.createQuery("select max(f.numero) from Factura f where f.anyo = :anyo");
+				.createQuery("select max(f.numero) from DocumentoComercial f where f.anyo = :anyo");
 		query.setParameter("anyo", anyo);
 		Integer ultimoNumero = (Integer) query.getSingleResult();
 		 

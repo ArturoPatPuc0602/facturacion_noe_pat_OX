@@ -9,6 +9,7 @@ import javax.validation.constraints.Digits;
 
 import org.openxava.annotations.*;
 import org.openxava.calculators.*;
+import org.openxava.jpa.XPersistence;
 
 import com.tuempresa.facturacion.calculadores.*;
 
@@ -16,7 +17,7 @@ import lombok.*;
 
 @Entity @Getter @Setter
 @View(members=
-"anyo, numero, fecha;" +
+"anyo, numero, fecha," +
      "datos{"+
        "cliente;" +
        "detalles;" +
@@ -31,8 +32,7 @@ abstract public class DocumentoComercial extends Identificable {
 	 int anyo;
 	 
 	@Column(length=6)
-	@DefaultValueCalculator(value = CalculadorSiguienteNumeroParaAnyo.class,
-	 properties = @PropertyValue(name="anyo"))
+	@ReadOnly
 	 int numero;
 	 
 	@Required
@@ -68,9 +68,25 @@ abstract public class DocumentoComercial extends Identificable {
 	@Calculation("sum(detalles.importe) + iva")
 	BigDecimal importeTotal;
 	
+	@PrePersist
+	private void calcularNumero() {
+		 Query query = XPersistence.getManager().createQuery(
+		"select max(f.numero) from " +
+		getClass().getSimpleName() +
+		" f where f.anyo = :anyo");
+		 query.setParameter("anyo", anyo);
+		 Integer ultimoNumero = (Integer) query.getSingleResult();
+		 this.numero = ultimoNumero == null ? 1 : ultimoNumero + 1;
+		}
+	
 	
 	@Stereotype("MEMO")
 	 String observaciones;
+	
+	@org.hibernate.annotations.Formula("IMPORTETOTAL * 0.10")
+	@Setter(AccessLevel.NONE)
+	@Money
+	BigDecimal beneficioEstimado; 
 	
 	
 

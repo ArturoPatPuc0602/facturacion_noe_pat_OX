@@ -5,14 +5,14 @@ import java.time.DayOfWeek;
 import javax.persistence.*;
 
 import org.openxava.annotations.*;
+import org.openxava.util.XavaResources;
 
 import lombok.*;
 
 @Entity @Getter @Setter
 @View(extendsView="super.DEFAULT",
-members=
-"diasEntregaEstimados," +
-"factura { factura } "
+members="diasEntregaEstimados, entregado," +
+           "factura { factura } "
 )
 
 @View( name="SinClienteNiFactura",
@@ -22,6 +22,7 @@ members=
       "observaciones"
 )
 
+@RemoveValidator(com.tuempresa.facturacion.validadores.ValidadorBorrarPedido.class)
 public class Pedido extends DocumentoComercial {
 	
 	@ManyToOne
@@ -41,9 +42,23 @@ public class Pedido extends DocumentoComercial {
 	@Column(columnDefinition="INTEGER DEFAULT 1")
 	int diasEntrega;
 	
-	@PrePersist @PreUpdate
+	//@PrePersist @PreUpdate
 	private void recalcularDiasEntrega() {
 	 setDiasEntrega(getDiasEntregaEstimados());
 	}
-
+	
+	@Column(columnDefinition="BOOLEAN DEFAULT FALSE")
+	boolean entregado;
+	
+	@PrePersist @PreUpdate
+	private void validar() throws Exception {
+	   if (factura != null && !isEntregado()) {
+	    throw new javax.validation.ValidationException(
+	                    XavaResources.getString(
+	                    "pedido_debe_estar_entregado",
+	              getAnyo(),
+	              getNumero())
+	       );
+	  }
+	}
 }

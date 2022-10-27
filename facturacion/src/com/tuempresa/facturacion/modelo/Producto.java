@@ -5,6 +5,8 @@ import javax.persistence.*;
 
 import org.openxava.annotations.*;
 
+import com.tuempresa.facturacion.anotaciones.ISBN;
+
 import lombok.*;
 
 @Entity @Getter @Setter
@@ -35,5 +37,10 @@ Categoria categoria;
  @ManyToOne(fetch=FetchType.LAZY)
  @DescriptionsList
  Autor autor;
+ 
+ @Column(length=13) 
+ @ISBN(buscar = false)
+ String isbn;
+
 
 }
